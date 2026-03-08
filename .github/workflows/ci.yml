@@ -19,8 +19,5 @@ jobs:
 
       - name: Deploy to Remote Server (.140)
         run: |
-          # 1. ส่งไฟล์จากเครื่อง .139 ไปยังเครื่อง .140
           rsync -avz --exclude '.git' . root@192.168.10.140:/home/naron1/ai-sentiment-lab-2
-          
-          # 2. สั่งให้เครื่อง .140 รัน Docker ใหม่
           ssh root@192.168.10.140 "cd /home/naron1/ai-sentiment-lab-2 && sudo docker-compose up -d --build"
