@@ -14,21 +14,13 @@ jobs:
 
 
     steps:
-    - name: Checkout source code
-      uses: actions/checkout@v4
+      - name: Checkout source code
+        uses: actions/checkout@v4
 
-
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v3
-
-
-    - name: Build Docker image
-      run: |
-        docker build -t ai-sentiment-lab:test .
-
-
-    - name: Run container test
-      run: |
-        docker run -d -p 8501:8501 --name test-app ai-sentiment-lab:test
-        sleep 10
-        docker ps
+      - name: Deploy to Remote Server (.140)
+        run: |
+          # 1. ส่งไฟล์จากเครื่อง .139 ไปยังเครื่อง .140
+          rsync -avz --exclude '.git' . root@192.168.10.140:/home/naron1/ai-sentiment-lab-2
+          
+          # 2. สั่งให้เครื่อง .140 รัน Docker ใหม่
+          ssh root@192.168.10.140 "cd /home/naron1/ai-sentiment-lab-2 && sudo docker-compose up -d --build"
